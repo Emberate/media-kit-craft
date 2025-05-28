@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Github, Google } from "lucide-react";
 
 interface AuthFormProps {
   mode: "login" | "signup";
@@ -23,6 +23,12 @@ const AuthForm = ({ mode, onSubmit, onToggleMode }: AuthFormProps) => {
     onSubmit(email, password, mode === "signup" ? name : undefined);
   };
 
+  const handleSocialLogin = (provider: 'google' | 'github') => {
+    // Simulate social login
+    console.log(`${provider} login clicked`);
+    onSubmit("social@example.com", "password", provider === 'google' ? "Google User" : "GitHub User");
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-xl">
       <CardHeader className="text-center">
@@ -37,6 +43,39 @@ const AuthForm = ({ mode, onSubmit, onToggleMode }: AuthFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Social Login Buttons */}
+        <div className="space-y-3 mb-6">
+          <Button 
+            type="button" 
+            variant="outline" 
+            className="w-full"
+            onClick={() => handleSocialLogin('google')}
+          >
+            <Google className="h-4 w-4 mr-2" />
+            Continue with Google
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            className="w-full"
+            onClick={() => handleSocialLogin('github')}
+          >
+            <Github className="h-4 w-4 mr-2" />
+            Continue with GitHub
+          </Button>
+        </div>
+
+        {/* Divider */}
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-muted-foreground">Or continue with email</span>
+          </div>
+        </div>
+
+        {/* Email/Password Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === "signup" && (
             <div className="space-y-2">
