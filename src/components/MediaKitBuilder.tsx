@@ -57,14 +57,37 @@ const MediaKitBuilder = ({ onBack }: MediaKitBuilderProps) => {
     selectedTemplate: "modern"
   });
 
-  const updateData = (section: string, field: string, value: string) => {
-    setMediaKitData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof MediaKitData],
-        [field]: value
+  const updateData = (section: keyof MediaKitData, field: string, value: string) => {
+    setMediaKitData(prev => {
+      if (section === 'instagram') {
+        return {
+          ...prev,
+          instagram: {
+            ...prev.instagram,
+            [field]: value
+          }
+        };
       }
-    }));
+      if (section === 'youtube') {
+        return {
+          ...prev,
+          youtube: {
+            ...prev.youtube,
+            [field]: value
+          }
+        };
+      }
+      if (section === 'pricing') {
+        return {
+          ...prev,
+          pricing: {
+            ...prev.pricing,
+            [field]: value
+          }
+        };
+      }
+      return prev;
+    });
   };
 
   const addCollaboration = () => {
