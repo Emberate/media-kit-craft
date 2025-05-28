@@ -6,12 +6,66 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star, Users, TrendingUp, Download, Eye, Palette } from "lucide-react";
 import { motion } from "framer-motion";
 import MediaKitBuilder from "@/components/MediaKitBuilder";
+import AuthForm from "@/components/AuthForm";
 
 const Index = () => {
   const [showBuilder, setShowBuilder] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  if (showBuilder) {
+  const handleAuthSubmit = (email: string, password: string, name?: string) => {
+    // Simulate authentication
+    console.log("Auth submitted:", { email, password, name });
+    setIsAuthenticated(true);
+    setShowAuth(false);
+    setShowBuilder(true);
+  };
+
+  const handleAuthToggle = () => {
+    setAuthMode(authMode === "login" ? "signup" : "login");
+  };
+
+  const handleGetStarted = () => {
+    setAuthMode("signup");
+    setShowAuth(true);
+  };
+
+  const handleLogin = () => {
+    setAuthMode("login");
+    setShowAuth(true);
+  };
+
+  // Show builder if authenticated
+  if (showBuilder && isAuthenticated) {
     return <MediaKitBuilder onBack={() => setShowBuilder(false)} />;
+  }
+
+  // Show auth form
+  if (showAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="font-bold text-3xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+              MediaKit Pro
+            </div>
+            <Button 
+              variant="ghost" 
+              onClick={() => setShowAuth(false)}
+              className="text-gray-600"
+            >
+              ← Back to home
+            </Button>
+          </div>
+          <AuthForm 
+            mode={authMode}
+            onSubmit={handleAuthSubmit}
+            onToggleMode={handleAuthToggle}
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -30,8 +84,8 @@ const Index = () => {
           animate={{ opacity: 1, x: 0 }}
           className="space-x-4"
         >
-          <Button variant="ghost">Login</Button>
-          <Button>Sign Up</Button>
+          <Button variant="ghost" onClick={handleLogin}>Login</Button>
+          <Button onClick={handleGetStarted}>Sign Up</Button>
         </motion.div>
       </nav>
 
@@ -63,7 +117,7 @@ const Index = () => {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg"
-              onClick={() => setShowBuilder(true)}
+              onClick={handleGetStarted}
             >
               Start Building <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -192,7 +246,7 @@ const Index = () => {
             size="lg" 
             variant="secondary"
             className="px-8 py-4 text-lg bg-white text-purple-600 hover:bg-gray-100"
-            onClick={() => setShowBuilder(true)}
+            onClick={handleGetStarted}
           >
             Create Your Media Kit <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
