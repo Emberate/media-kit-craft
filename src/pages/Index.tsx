@@ -7,10 +7,12 @@ import { ArrowRight, Star, Users, TrendingUp, Download, Eye, Palette } from "luc
 import { motion } from "framer-motion";
 import MediaKitBuilder from "@/components/MediaKitBuilder";
 import AuthForm from "@/components/AuthForm";
+import Dashboard from "@/components/Dashboard";
 
 const Index = () => {
   const [showBuilder, setShowBuilder] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -19,7 +21,7 @@ const Index = () => {
     console.log("Auth submitted:", { email, password, name });
     setIsAuthenticated(true);
     setShowAuth(false);
-    setShowBuilder(true);
+    setShowDashboard(true);
   };
 
   const handleAuthToggle = () => {
@@ -36,9 +38,24 @@ const Index = () => {
     setShowAuth(true);
   };
 
-  // Show builder if authenticated
+  const handleCreateMediaKit = () => {
+    setShowDashboard(false);
+    setShowBuilder(true);
+  };
+
+  const handleBackToDashboard = () => {
+    setShowBuilder(false);
+    setShowDashboard(true);
+  };
+
+  // Show builder if coming from dashboard
   if (showBuilder && isAuthenticated) {
-    return <MediaKitBuilder onBack={() => setShowBuilder(false)} />;
+    return <MediaKitBuilder onBack={handleBackToDashboard} />;
+  }
+
+  // Show dashboard if authenticated
+  if (showDashboard && isAuthenticated) {
+    return <Dashboard onBack={() => setShowDashboard(false)} onCreateMediaKit={handleCreateMediaKit} />;
   }
 
   // Show auth form
